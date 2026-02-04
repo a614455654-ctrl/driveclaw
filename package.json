@@ -49,7 +49,8 @@
         "nsis",
         "portable"
       ],
-      "artifactName": "${productName}-${version}-Setup.${ext}"
+      "artifactName": "${productName}-${version}-Setup.${ext}",
+      "signAndEditExecutable": false
     },
     "portable": {
       "artifactName": "${productName}-${version}-Portable.exe"
