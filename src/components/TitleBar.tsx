@@ -24,7 +24,7 @@ export default function TitleBar({ title }: TitleBarProps) {
     <div className="titlebar">
       <div className="titlebar-drag">
         <span className="titlebar-logo">🦞</span>
-        <span className="titlebar-title">DriveClaw</span>
+        <span className="titlebar-title">Drivemolt</span>
         <span className="titlebar-separator">|</span>
         <span className="titlebar-page">{title}</span>
       </div>

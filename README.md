@@ -1,4 +1,4 @@
-# DriveClaw
+# Drivemolt
 
 <p align="center">
   <img src="https://img.shields.io/badge/Electron-33-47848F?logo=electron&logoColor=white" alt="Electron">
@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white" alt="Vite">
 </p>
 
-**DriveClaw** 是 [moltBOT/OpenClaw](https://github.com/anthropics/claude-code) 的桌面控制面板，提供可视化界面来管理和监控你的 AI 助手。
+**Drivemolt** 是 [moltBOT/OpenClaw](https://github.com/anthropics/claude-code) 的桌面控制面板，提供可视化界面来管理和监控你的 AI 助手。
 
 ![Dashboard Preview](docs/screenshot.png)
 
@@ -46,8 +46,8 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/a614455654-ctrl/driveclaw.git
-cd driveclaw
+git clone https://github.com/a614455654-ctrl/Drivemolt.git
+cd Drivemolt
 
 # 安装依赖
 npm install
@@ -83,7 +83,7 @@ npm run electron:build
 ## 📁 项目结构
 
 ```
-driveclaw/
+Drivemolt/
 ├── electron/          # Electron 主进程
 │   ├── main.ts        # 主进程入口
 │   └── preload.ts     # 预加载脚本

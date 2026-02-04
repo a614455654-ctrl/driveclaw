@@ -72,7 +72,7 @@ const generateKeyName = (apiKey: string, provider: string): string => {
 };
 
 // 测速状态缓存
-const BENCHMARK_STATE_KEY = 'driveclaw_benchmark_state';
+const BENCHMARK_STATE_KEY = 'Drivemolt_benchmark_state';
 
 function loadBenchmarkState() {
   try {
@@ -117,7 +117,7 @@ export default function Models() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [expandedProviders, setExpandedProviders] = useState<string[]>(() => {
     try {
-      const saved = localStorage.getItem('driveclaw_expanded_providers');
+      const saved = localStorage.getItem('Drivemolt_expanded_providers');
       return saved ? JSON.parse(saved) : ['nvidia'];
     } catch { return ['nvidia']; }
   });
@@ -130,10 +130,10 @@ export default function Models() {
   const [benchmarkInterrupted, setBenchmarkInterrupted] = useState(cachedBenchmarkState?.benchmarking || false);
   const [benchmarkResults, setBenchmarkResults] = useState<Record<string, BenchmarkResult>>({});
   const [sortMode, setSortMode] = useState<'none' | 'tps' | 'latency'>(() => {
-    return (localStorage.getItem('driveclaw_sort_mode') as 'none' | 'tps' | 'latency') || 'none';
+    return (localStorage.getItem('Drivemolt_sort_mode') as 'none' | 'tps' | 'latency') || 'none';
   });
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(() => {
-    return (localStorage.getItem('driveclaw_sort_direction') as 'asc' | 'desc') || 'desc';
+    return (localStorage.getItem('Drivemolt_sort_direction') as 'asc' | 'desc') || 'desc';
   });
   
   // 保存测速状态
@@ -156,7 +156,7 @@ export default function Models() {
   // 加载测速结果
   const loadBenchmarkResults = () => {
     try {
-      const saved = localStorage.getItem('driveclaw_benchmark_results');
+      const saved = localStorage.getItem('Drivemolt_benchmark_results');
       if (saved) {
         const results = JSON.parse(saved) as Record<string, BenchmarkResult>;
         // 过滤掉 pending 状态的结果
@@ -177,7 +177,7 @@ export default function Models() {
       const toSave = Object.fromEntries(
         Object.entries(results).filter(([_, v]) => v.status !== 'pending')
       );
-      localStorage.setItem('driveclaw_benchmark_results', JSON.stringify(toSave));
+      localStorage.setItem('Drivemolt_benchmark_results', JSON.stringify(toSave));
     } catch (e) {
       console.error('Failed to save benchmark results', e);
     }
@@ -185,13 +185,13 @@ export default function Models() {
 
   const persistKeys = (keys: SavedApiKey[]) => {
     try {
-      localStorage.setItem('driveclaw_saved_keys', JSON.stringify(keys));
+      localStorage.setItem('Drivemolt_saved_keys', JSON.stringify(keys));
       return true;
     } catch (e) {
       // 若模型列表过大导致存储失败，则仅保存 key 元信息
       try {
         const compact = keys.map(k => ({ ...k, models: [] }));
-        localStorage.setItem('driveclaw_saved_keys', JSON.stringify(compact));
+        localStorage.setItem('Drivemolt_saved_keys', JSON.stringify(compact));
         return true;
       } catch (e2) {
         console.error('Failed to persist keys', e2);
@@ -218,13 +218,13 @@ export default function Models() {
   // 加载已保存的 API Keys
   const loadSavedKeys = async () => {
     try {
-      const saved = localStorage.getItem('driveclaw_saved_keys');
+      const saved = localStorage.getItem('Drivemolt_saved_keys');
       if (saved) {
         const keys = JSON.parse(saved) as SavedApiKey[];
         setSavedKeys(keys);
         
         // 加载当前激活的 key
-        const activeId = localStorage.getItem('driveclaw_active_key');
+        const activeId = localStorage.getItem('Drivemolt_active_key');
         if (activeId && keys.find(k => k.id === activeId)) {
           setActiveKeyId(activeId);
         } else if (keys.length > 0) {
@@ -236,7 +236,7 @@ export default function Models() {
           await refreshModelsForKey(activeKey);
         }
       }
-      setFavorites(JSON.parse(localStorage.getItem('driveclaw_favorites') || '[]'));
+      setFavorites(JSON.parse(localStorage.getItem('Drivemolt_favorites') || '[]'));
     } catch (e) {
       console.error('Failed to load saved keys', e);
     }
@@ -255,7 +255,7 @@ export default function Models() {
     setLoading(true);
     try {
       // 优先从 localStorage 加载（避免闪烁）
-      const cachedModel = localStorage.getItem('driveclaw_current_model');
+      const cachedModel = localStorage.getItem('Drivemolt_current_model');
       if (cachedModel) {
         setCurrentModel(cachedModel);
       }
@@ -270,7 +270,7 @@ export default function Models() {
         
         if (primaryModel && typeof primaryModel === 'string') {
           setCurrentModel(primaryModel);
-          localStorage.setItem('driveclaw_current_model', primaryModel);
+          localStorage.setItem('Drivemolt_current_model', primaryModel);
         } else if (!cachedModel) {
           // 尝试从 CLI 读取
           const result = await electronAPI?.moltBOT.configGet('agents.defaults.model.primary');
@@ -278,7 +278,7 @@ export default function Models() {
             const modelName = extractModelName(result);
             if (modelName && modelName !== '未配置') {
               setCurrentModel(modelName);
-              localStorage.setItem('driveclaw_current_model', modelName);
+              localStorage.setItem('Drivemolt_current_model', modelName);
             }
           }
         }
@@ -289,7 +289,7 @@ export default function Models() {
           const modelName = extractModelName(result);
           if (modelName && modelName !== '未配置') {
             setCurrentModel(modelName);
-            localStorage.setItem('driveclaw_current_model', modelName);
+            localStorage.setItem('Drivemolt_current_model', modelName);
           }
         }
       }
@@ -317,7 +317,7 @@ export default function Models() {
     if (!key) return;
     
     setActiveKeyId(keyId);
-    localStorage.setItem('driveclaw_active_key', keyId);
+    localStorage.setItem('Drivemolt_active_key', keyId);
     if (!key.models || key.models.length === 0) {
       await refreshModelsForKey(key);
     }
@@ -341,9 +341,9 @@ export default function Models() {
       const newActive = updated.length > 0 ? updated[0].id : null;
       setActiveKeyId(newActive);
       if (newActive) {
-        localStorage.setItem('driveclaw_active_key', newActive);
+        localStorage.setItem('Drivemolt_active_key', newActive);
       } else {
-        localStorage.removeItem('driveclaw_active_key');
+        localStorage.removeItem('Drivemolt_active_key');
       }
     }
   };
@@ -448,10 +448,10 @@ export default function Models() {
       
       setCurrentModel(fullModelId);
       // 保存到localStorage作为备份
-      localStorage.setItem('driveclaw_current_model', fullModelId);
+      localStorage.setItem('Drivemolt_current_model', fullModelId);
       
       // 检查是否自动重启 Gateway（默认开启）
-      const autoRestart = localStorage.getItem('driveclaw_auto_restart_gateway') !== 'false';
+      const autoRestart = localStorage.getItem('Drivemolt_auto_restart_gateway') !== 'false';
       if (autoRestart) {
         await electronAPI?.notify('模型已切换', `${fullModelId} - Gateway 将自动重启...`);
         // moltBOT 会检测到 lastTouchedAt 变化并自动重启
@@ -472,7 +472,7 @@ export default function Models() {
       ? favorites.filter(f => f !== modelId)
       : [...favorites, modelId];
     setFavorites(newFavorites);
-    localStorage.setItem('driveclaw_favorites', JSON.stringify(newFavorites));
+    localStorage.setItem('Drivemolt_favorites', JSON.stringify(newFavorites));
   };
 
   const toggleProvider = (providerId: string) => {
@@ -480,7 +480,7 @@ export default function Models() {
       const updated = prev.includes(providerId) 
         ? prev.filter(p => p !== providerId)
         : [...prev, providerId];
-      localStorage.setItem('driveclaw_expanded_providers', JSON.stringify(updated));
+      localStorage.setItem('Drivemolt_expanded_providers', JSON.stringify(updated));
       return updated;
     });
   };
@@ -667,8 +667,8 @@ export default function Models() {
     
     setSortMode(newMode);
     setSortDirection(newDirection);
-    localStorage.setItem('driveclaw_sort_mode', newMode);
-    localStorage.setItem('driveclaw_sort_direction', newDirection);
+    localStorage.setItem('Drivemolt_sort_mode', newMode);
+    localStorage.setItem('Drivemolt_sort_direction', newDirection);
   };
 
   return (

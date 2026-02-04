@@ -96,9 +96,9 @@ interface AgentEventPayload {
 }
 
 // 持久化存储 key
-const CONVERSATIONS_KEY = 'driveclaw-conversations'
-const ACTIVE_CONV_KEY = 'driveclaw-active-conversation'
-const SETTINGS_KEY = 'driveclaw-chat-settings'
+const CONVERSATIONS_KEY = 'Drivemolt-conversations'
+const ACTIVE_CONV_KEY = 'Drivemolt-active-conversation'
+const SETTINGS_KEY = 'Drivemolt-chat-settings'
 
 // 生成唯一 ID
 const generateId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
