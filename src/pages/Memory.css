@@ -1,0 +1,514 @@
+.memory-page {
+  max-width: 1000px;
+}
+
+.memory-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.memory-page .page-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+}
+
+.memory-page .header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.memory-page .header-actions button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 统计卡片 */
+.memory-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.stat-card .stat-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(232, 121, 84, 0.1);
+  border-radius: 12px;
+  color: var(--primary);
+}
+
+.stat-card .stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-card .stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stat-card .stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* 搜索和筛选 */
+.search-filter-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  flex: 1;
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-icon {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.search-input-wrapper input {
+  flex: 1;
+  border: none;
+  background: transparent;
+}
+
+.table-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+}
+
+.table-filter select {
+  border: none;
+  background: transparent;
+  padding: 12px 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* 记忆列表 */
+.memory-list {
+  margin-bottom: 24px;
+}
+
+.memory-list h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.memory-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.memory-item {
+  padding: 0;
+  overflow: hidden;
+}
+
+.memory-item .memory-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.memory-item .memory-header:hover {
+  background: var(--bg-hover);
+}
+
+.memory-item .memory-expand {
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.memory-item .memory-preview {
+  flex: 1;
+  min-width: 0;
+}
+
+.memory-item .memory-content-preview {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.memory-item .memory-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.memory-item .memory-table {
+  padding: 2px 8px;
+  background: rgba(232, 121, 84, 0.1);
+  color: var(--primary);
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.memory-item .memory-time {
+  color: var(--text-secondary);
+}
+
+.memory-item .memory-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.memory-item .icon-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.memory-item .icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.memory-item .icon-btn.danger:hover {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.memory-item .icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 展开内容 */
+.memory-expanded {
+  padding: 0 16px 16px 44px;
+  border-top: 1px solid var(--border);
+}
+
+.memory-full-content {
+  margin-top: 16px;
+}
+
+.memory-full-content pre {
+  margin: 0;
+  padding: 12px;
+  background: var(--bg-hover);
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.memory-metadata {
+  margin-top: 12px;
+}
+
+.memory-metadata h4 {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.memory-metadata pre {
+  margin: 0;
+  padding: 12px;
+  background: var(--bg-sidebar);
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-state svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* 信息框 */
+.memory-info {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  background: rgba(232, 121, 84, 0.05);
+  border: 1px solid var(--primary);
+}
+
+.memory-info .info-icon {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.memory-info .info-content h4 {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.memory-info .info-content p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* 错误框 */
+.error-box {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+.error-box .error-content p {
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.error-box .error-content small {
+  color: var(--text-secondary);
+  font-family: monospace;
+  font-size: 12px;
+}
+
+/* 模态框 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--bg-card);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  margin: 0;
+}
+
+.modal-header .close-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.modal-header .close-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.modal-footer button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 详情模态框 */
+.memory-detail-modal .detail-section {
+  margin-bottom: 16px;
+}
+
+.memory-detail-modal .detail-section label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.memory-detail-modal .detail-value {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.memory-detail-modal .detail-value.mono {
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.memory-detail-modal .detail-content {
+  background: var(--bg-hover);
+  border-radius: 6px;
+  padding: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.memory-detail-modal .detail-content pre {
+  margin: 0;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 确认模态框 */
+.confirm-modal .modal-body p {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+}
+
+.confirm-modal .warning-text {
+  color: var(--danger);
+  font-weight: 500;
+}
+
+/* 危险按钮轮廓样式 */
+.danger-outline {
+  background: transparent !important;
+  border: 1px solid var(--danger) !important;
+  color: var(--danger) !important;
+}
+
+.danger-outline:hover {
+  background: rgba(231, 76, 60, 0.1) !important;
+}
+
+/* 加载动画 */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .memory-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .search-filter-row {
+    flex-direction: column;
+  }
+  
+  .memory-page .header-actions {
+    flex-direction: column;
+  }
+}

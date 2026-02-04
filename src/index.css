@@ -1,0 +1,160 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root,
+[data-theme="dark"] {
+  --primary: #FF6B35;
+  --primary-hover: #FF8C5A;
+  --primary-dark: #E55A2B;
+  --bg-dark: #1E1E2E;
+  --bg-sidebar: #2D2D3F;
+  --bg-card: #3D3D5C;
+  --bg-input: #4D4D6C;
+  --bg-hover: #4D4D6C;
+  --border: #4D4D6C;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0A0B0;
+  --text-muted: #707080;
+  --success: #4CAF50;
+  --error: #F44336;
+  --danger: #F44336;
+  --warning: #FF9800;
+}
+
+[data-theme="light"] {
+  --primary: #FF6B35;
+  --primary-hover: #FF8C5A;
+  --primary-dark: #E55A2B;
+  --bg-dark: #F5F5F5;
+  --bg-sidebar: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-input: #F0F0F0;
+  --bg-hover: #E8E8E8;
+  --border: #E0E0E0;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --success: #4CAF50;
+  --error: #F44336;
+  --danger: #F44336;
+  --warning: #FF9800;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-sidebar);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-card);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-input);
+}
+
+/* 按钮基础样式 */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+button.primary {
+  background: var(--primary);
+  color: white;
+}
+
+button.primary:hover {
+  background: var(--primary-hover);
+}
+
+button.secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+button.secondary:hover {
+  background: var(--bg-input);
+}
+
+/* 输入框样式 */
+input, textarea, select {
+  background: var(--bg-input);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+/* 卡片样式 */
+.card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--border);
+}
+
+[data-theme="light"] .card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .sidebar {
+  border-right: 1px solid var(--border);
+}
+
+[data-theme="light"] .titlebar {
+  border-bottom: 1px solid var(--border);
+}
+
+/* 状态指示器 */
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.online {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+
+.status-dot.offline {
+  background: var(--error);
+}
+
+.status-dot.warning {
+  background: var(--warning);
+}

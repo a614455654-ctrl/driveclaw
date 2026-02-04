@@ -1,0 +1,690 @@
+.models-page {
+  max-width: 1000px;
+}
+
+.models-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.models-page .page-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+}
+
+.current-model {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.current-info {
+  flex: 1;
+}
+
+.current-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.current-value {
+  font-family: monospace;
+  font-size: 14px;
+  color: var(--primary);
+}
+
+/* API 配置 */
+.api-config {
+  margin-bottom: 16px;
+}
+
+.api-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.api-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  margin: 0;
+}
+
+.btn-small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-small:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* 已保存的 API Keys 列表 */
+.saved-keys-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.saved-key-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.saved-key-item:hover {
+  border-color: var(--primary);
+}
+
+.saved-key-item.active {
+  border-color: var(--primary);
+  background: rgba(255, 107, 53, 0.08);
+}
+
+.key-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.key-name {
+  font-weight: 500;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.key-provider {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: var(--bg-card);
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+
+.key-models {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.key-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--success);
+  background: rgba(46, 204, 113, 0.15);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.btn-icon-small {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon-small:hover {
+  background: var(--bg-card);
+}
+
+.btn-icon-small.danger:hover {
+  color: var(--danger);
+  background: rgba(231, 76, 60, 0.1);
+}
+
+/* 添加新 Key 表单 */
+.add-key-form {
+  padding: 12px;
+  background: var(--bg-hover);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.form-row:last-child {
+  margin-bottom: 0;
+}
+
+.form-row select {
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  min-width: 120px;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.key-name-input {
+  max-width: 150px;
+}
+
+.key-input {
+  flex: 1;
+}
+
+/* 无 Key 提示 */
+.no-key-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.no-key-hint p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* 兼容旧的 api-form 样式 */
+.api-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.api-form select {
+  padding: 10px 12px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  min-width: 120px;
+}
+
+.api-form input {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.api-form input:focus,
+.api-form select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--primary);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.api-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(231, 76, 60, 0.1);
+  border-radius: 6px;
+  color: var(--danger);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.api-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* 搜索行 */
+.search-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.search-row .search-box {
+  margin-bottom: 0;
+}
+
+/* 搜索框 */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.search-box input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.search-box input:focus {
+  outline: none;
+}
+
+.search-box svg {
+  color: var(--text-muted);
+}
+
+/* 模型列表 */
+.models-list {
+  margin-bottom: 16px;
+}
+
+.provider-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.provider-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.provider-header:hover {
+  background: var(--bg-hover);
+}
+
+.provider-header.configured {
+  border-left: 3px solid var(--success);
+}
+
+.provider-name {
+  font-weight: 600;
+  flex: 1;
+}
+
+.model-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.check-icon {
+  color: var(--success);
+}
+
+.models-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.no-models {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.unconfigured-hint {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.model-card {
+  padding: 12px;
+  background: var(--bg-hover);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.model-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.model-card.active {
+  border-color: var(--primary);
+  background: rgba(255, 107, 53, 0.08);
+}
+
+.model-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.model-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  flex: 1;
+  word-break: break-word;
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px;
+  margin: -2px;
+}
+
+.star-btn:hover,
+.star-btn.starred {
+  color: #f1c40f;
+}
+
+.model-id {
+  font-size: 10px;
+  font-family: monospace;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.model-owner {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.active-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--success);
+  background: rgba(46, 204, 113, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.switching-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 30, 46, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+/* 提示 */
+.model-tips {
+  background: var(--bg-sidebar);
+}
+
+.model-tips h3 {
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.model-tips ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.model-tips li {
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding-left: 16px;
+  position: relative;
+}
+
+.model-tips li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+}
+
+/* 工具样式 */
+.btn-icon {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.btn-icon:hover {
+  background: var(--bg-hover);
+  color: var(--primary);
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 测速按钮 */
+.btn-benchmark {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.btn-benchmark:hover:not(:disabled) {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.btn-benchmark:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 测速行 - 结果和按钮 */
+.benchmark-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* 单个模型测速按钮 */
+.btn-benchmark-single {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-benchmark-single:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+/* 测速结果 */
+.benchmark-result {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  flex: 1;
+}
+
+.benchmark-result.empty {
+  background: var(--bg-hover);
+  color: var(--text-muted);
+}
+
+.benchmark-result.pending {
+  background: rgba(255, 193, 7, 0.15);
+  color: #ffc107;
+}
+
+.benchmark-result.ok {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--success);
+  font-family: monospace;
+}
+
+.benchmark-result.error {
+  background: rgba(231, 76, 60, 0.1);
+  color: var(--danger);
+}
+
+/* 排序按钮组 */
+.sort-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-sort {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-sort:hover {
+  border-color: var(--primary);
+  color: var(--text-primary);
+}
+
+.btn-sort.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}

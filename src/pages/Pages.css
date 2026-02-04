@@ -1,0 +1,102 @@
+.page {
+  max-width: 900px;
+}
+
+.page h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.page .card {
+  margin-bottom: 20px;
+}
+
+.page .card h3 {
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.hint {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+/* Channel Card */
+.channel-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.channel-icon {
+  font-size: 32px;
+}
+
+.channel-info h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.channel-info p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* Skills Grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.skill-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.skill-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.skill-card h3 {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.skill-status {
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: var(--success);
+  color: white;
+}
+
+.skill-card.missing .skill-status {
+  background: var(--text-secondary);
+}
+
+/* Settings */
+.setting-item {
+  margin-bottom: 16px;
+}
+
+.setting-item label {
+  display: block;
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.setting-item input {
+  width: 100%;
+}
+
+.setting-item input[readonly] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
