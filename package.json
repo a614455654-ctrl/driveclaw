@@ -1,6 +1,6 @@
 {
   "name": "Driveclaw",
-  "version": "1.0.0",
+"version": "1.0.1",
   "description": "moltBOT Desktop Control Panel",
   "main": "dist-electron/main.js",
   "scripts": {

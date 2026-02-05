@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Settings as SettingsIcon, Save, RefreshCw, FolderOpen, Key, Globe, MessageSquare, Zap, Moon, Sun, Monitor, Plus, Trash2, Check, Edit2, Download, Loader, Chrome, ExternalLink } from 'lucide-react'
 import './Settings.css'
 
-const APP_VERSION = '1.0.0'
+const APP_VERSION = '1.0.1'
 
 interface Config {
   moltBOTPath: string
