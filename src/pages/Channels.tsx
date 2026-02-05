@@ -22,6 +22,23 @@ interface ChannelConfig {
 
 const electronAPI = (window as any).electronAPI
 
+// 数据迁移
+function migrateChannelsData() {
+  const migrations = [
+    ['Drivemolt_channels_detail', 'Driveclaw_channels_detail'],
+  ]
+  for (const [oldKey, newKey] of migrations) {
+    try {
+      const oldData = localStorage.getItem(oldKey)
+      if (oldData && !localStorage.getItem(newKey)) {
+        localStorage.setItem(newKey, oldData)
+        localStorage.removeItem(oldKey)
+      }
+    } catch {}
+  }
+}
+migrateChannelsData()
+
 export default function Channels() {
   const [channels, setChannels] = useState<Channel[]>([])
   const [loading, setLoading] = useState(false)

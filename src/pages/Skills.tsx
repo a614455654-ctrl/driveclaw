@@ -59,6 +59,26 @@ interface DependencyInfo {
 
 const electronAPI = (window as any).electronAPI
 
+// 数据迁移
+function migrateSkillsData() {
+  const migrations = [
+    ['Drivemolt_local_skills', 'Driveclaw_local_skills'],
+    ['Drivemolt_local_skills_stats', 'Driveclaw_local_skills_stats'],
+    ['Drivemolt_hub_skills', 'Driveclaw_hub_skills'],
+    ['Drivemolt_smithery_servers', 'Driveclaw_smithery_servers'],
+  ]
+  for (const [oldKey, newKey] of migrations) {
+    try {
+      const oldData = localStorage.getItem(oldKey)
+      if (oldData && !localStorage.getItem(newKey)) {
+        localStorage.setItem(newKey, oldData)
+        localStorage.removeItem(oldKey)
+      }
+    } catch {}
+  }
+}
+migrateSkillsData()
+
 // 缓存 key
 const CACHE_KEYS = {
   localSkills: 'Driveclaw_local_skills',

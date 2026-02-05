@@ -74,6 +74,31 @@ const generateKeyName = (apiKey: string, provider: string): string => {
 // 测速状态缓存
 const BENCHMARK_STATE_KEY = 'Driveclaw_benchmark_state';
 
+// 数据迁移: 从Molt 前缀迁移到新前缀
+function migrateLocalStorageData() {
+  const migrations = [
+    ['Drivemolt_saved_keys', 'Driveclaw_saved_keys'],
+    ['Drivemolt_benchmark_results', 'Driveclaw_benchmark_results'],
+    ['Drivemolt_expanded_providers', 'Driveclaw_expanded_providers'],
+    ['Drivemolt_sort_mode', 'Driveclaw_sort_mode'],
+    ['Drivemolt_sort_direction', 'Driveclaw_sort_direction'],
+    ['Drivemolt_benchmark_state', 'Driveclaw_benchmark_state'],
+  ];
+  
+  for (const [oldKey, newKey] of migrations) {
+    try {
+      const oldData = localStorage.getItem(oldKey);
+      if (oldData && !localStorage.getItem(newKey)) {
+        localStorage.setItem(newKey, oldData);
+        localStorage.removeItem(oldKey);
+      }
+    } catch {}
+  }
+}
+
+// 执行迁移
+migrateLocalStorageData();
+
 function loadBenchmarkState() {
   try {
     const saved = localStorage.getItem(BENCHMARK_STATE_KEY);
