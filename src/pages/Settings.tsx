@@ -153,12 +153,19 @@ export default function Settings() {
   const [extensionPath, setExtensionPath] = useState('')
   const [extensionExists, setExtensionExists] = useState(false)
   
-  // moltBOT 路径配置
+  // moltBOT 工作目录配置
   const [moltBOTPath, setmoltBOTPath] = useState('')
   const [skillsPath, setSkillsPath] = useState('')
   const [searchedPaths, setSearchedPaths] = useState<string[]>([])
   const [searchingPaths, setSearchingPaths] = useState(false)
   const [showPathModal, setShowPathModal] = useState(false)
+  
+  // CLI 路径配置
+  const [cliPath, setCliPath] = useState('')
+  const [cliConfigured, setCliConfigured] = useState(false)
+  const [searchedCliPaths, setSearchedCliPaths] = useState<string[]>([])
+  const [searchingCliPaths, setSearchingCliPaths] = useState(false)
+  const [showCliPathModal, setShowCliPathModal] = useState(false)
   
   // 保存 moltBOT 更新状态到缓存
   useEffect(() => {
@@ -259,6 +266,18 @@ export default function Settings() {
     loadmoltBOTPath()
   }, [])
   
+  // 加载 CLI 路径
+  useEffect(() => {
+    const loadCliPath = async () => {
+      const result = await electronAPI?.moltBOT.getCliPath()
+      if (result?.success) {
+        setCliPath(result.path || '')
+        setCliConfigured(result.isConfigured)
+      }
+    }
+    loadCliPath()
+  }, [])
+  
   // 自动搜索 moltBOT 路径
   const searchmoltBOTPaths = async () => {
     setSearchingPaths(true)
@@ -298,6 +317,43 @@ export default function Settings() {
       setSkillsPath(result.skillsPath)
       showMessage('success', 'moltBOT 路径已更新')
       setShowPathModal(false)
+    } else {
+      showMessage('error', result?.error || '设置失败')
+    }
+  }
+  
+  // 自动搜索 CLI 路径
+  const searchCliPaths = async () => {
+    setSearchingCliPaths(true)
+    try {
+      const result = await electronAPI?.moltBOT.searchCliPaths()
+      if (result?.success) {
+        setSearchedCliPaths(result.paths || [])
+      }
+    } catch {}
+    setSearchingCliPaths(false)
+  }
+  
+  // 手动选择 CLI 路径
+  const selectCliPath = async () => {
+    const result = await electronAPI?.moltBOT.selectCliFolder()
+    if (result?.path) {
+      if (result.isValid) {
+        await setNewCliPath(result.path)
+      } else {
+        showMessage('error', '无效的 OpenClaw CLI 路径，找不到 dist/index.js')
+      }
+    }
+  }
+  
+  // 设置新的 CLI 路径
+  const setNewCliPath = async (newPath: string) => {
+    const result = await electronAPI?.moltBOT.setCliPath(newPath)
+    if (result?.success) {
+      setCliPath(result.path)
+      setCliConfigured(true)
+      showMessage('success', 'OpenClaw CLI 路径已配置')
+      setShowCliPathModal(false)
     } else {
       showMessage('error', result?.error || '设置失败')
     }
@@ -888,6 +944,20 @@ export default function Settings() {
               </div>
             )}
           </div>
+          <div className="setting-item path-setting">
+            <div className="setting-info">
+              <label>OpenClaw CLI 路径</label>
+              <span className="hint">启动 Gateway 服务所需的 CLI 程序路径</span>
+            </div>
+            <div className="path-display">
+              <code className={`current-path ${!cliConfigured ? 'not-configured' : ''}`}>
+                {cliPath || '未配置 - 点击配置后才能启动 Gateway'}
+              </code>
+              <button className="btn-small btn-primary-small" onClick={() => setShowCliPathModal(true)}>
+                <FolderOpen size={14} /> 配置路径
+              </button>
+            </div>
+          </div>
           <div className="setting-item deploy-item">
             <div className="setting-info">
               <label>一键部署 moltBOT</label>
@@ -1418,6 +1488,67 @@ export default function Settings() {
                   <li>选择包含 <code>skills</code> 和 <code>memory</code> 文件夹的目录</li>
                   <li>技能将安装到 <code>skills</code> 子目录中</li>
                   <li>修改后需要重启 Gateway 才能生效</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* OpenClaw CLI 路径配置弹窗 */}
+      {showCliPathModal && (
+        <div className="modal-overlay" onClick={() => setShowCliPathModal(false)}>
+          <div className="modal-content modal-path" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3><FolderOpen size={18} /> 配置 OpenClaw CLI 路径</h3>
+              <button className="btn-icon" onClick={() => setShowCliPathModal(false)}>✕</button>
+            </div>
+            <div className="modal-body">
+              <div className="current-path-section">
+                <label>当前路径</label>
+                <code className={`path-code ${!cliConfigured ? 'not-configured' : ''}`}>
+                  {cliPath || '未配置'}
+                </code>
+              </div>
+              
+              <div className="path-actions">
+                <button 
+                  className="btn-secondary"
+                  onClick={searchCliPaths}
+                  disabled={searchingCliPaths}
+                >
+                  {searchingCliPaths ? <RefreshCw size={14} className="spin" /> : <RefreshCw size={14} />}
+                  自动搜索
+                </button>
+                <button className="btn-primary" onClick={selectCliPath}>
+                  <FolderOpen size={14} /> 手动选择
+                </button>
+              </div>
+              
+              {searchedCliPaths.length > 0 && (
+                <div className="searched-paths">
+                  <label>发现的 OpenClaw CLI 目录</label>
+                  <div className="path-list">
+                    {searchedCliPaths.map((p, i) => (
+                      <div 
+                        key={i} 
+                        className={`path-item ${p === cliPath ? 'active' : ''}`}
+                        onClick={() => setNewCliPath(p)}
+                      >
+                        <code>{p}</code>
+                        {p === cliPath && <span className="current-badge">当前</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <div className="path-tips">
+                <p><strong>💡 提示:</strong></p>
+                <ul>
+                  <li>选择 OpenClaw 代码仓库的根目录</li>
+                  <li>该目录应包含 <code>dist/index.js</code> 文件</li>
+                  <li>配置后才能启动 Gateway 服务</li>
                 </ul>
               </div>
             </div>

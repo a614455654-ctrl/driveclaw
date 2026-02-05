@@ -1215,6 +1215,13 @@
   word-break: break-all;
 }
 
+.path-code.not-configured,
+.current-path.not-configured {
+  color: var(--warning, #f39c12);
+  border-color: var(--warning, #f39c12);
+  background: rgba(243, 156, 18, 0.1);
+}
+
 .path-actions {
   display: flex;
   gap: 12px;

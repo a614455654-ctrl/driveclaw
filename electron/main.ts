@@ -14,17 +14,64 @@ const execAsync = promisify(exec)
 
 // moltBOT 路径配置
 // CLI 路径 - 包含编译好的 dist/index.js
-const MOLTBOT_CLI_PATH = 'D:\\\u9879\u76ee\\openclaw'
+const DEFAULT_CLI_PATH = ''
 // 工作目录 - 包含 skills, memory 等
-const DEFAULT_WORKSPACE_PATH = 'C:\\Users\\FireBat\\clawd'
+const DEFAULT_WORKSPACE_PATH = path.join(os.homedir(), 'clawd')
 const WORKSPACE_CONFIG_PATH = path.join(app.getPath('userData'), 'openclaw-workspace.json')
+const CLI_CONFIG_PATH = path.join(app.getPath('userData'), 'openclaw-cli.json')
 const GATEWAY_PORT = 18789
 const WINDOW_STATE_PATH = path.join(app.getPath('userData'), 'window-state.json')
 const APP_SETTINGS_PATH = path.join(app.getPath('userData'), 'app-settings.json')
 
-// 获取 CLI 路径（固定）
+// 获取 CLI 路径（从配置文件读取）
 function getCliPath(): string {
-  return MOLTBOT_CLI_PATH
+  try {
+    if (fs.existsSync(CLI_CONFIG_PATH)) {
+      const config = JSON.parse(fs.readFileSync(CLI_CONFIG_PATH, 'utf8'))
+      if (config.path && fs.existsSync(config.path)) {
+        return config.path
+      }
+    }
+  } catch {}
+  return DEFAULT_CLI_PATH
+}
+
+// 保存 CLI 路径
+function saveCliPath(cliPath: string) {
+  try {
+    fs.writeFileSync(CLI_CONFIG_PATH, JSON.stringify({ path: cliPath }, null, 2))
+  } catch (e) {
+    console.error('Failed to save CLI path', e)
+  }
+}
+
+// 自动搜索可能的 CLI 路径
+function searchCliPaths(): string[] {
+  const possiblePaths: string[] = []
+  const homedir = os.homedir()
+  
+  const candidates = [
+    path.join(homedir, 'openclaw'),
+    path.join(homedir, '.openclaw'),
+    path.join(homedir, 'Projects', 'openclaw'),
+    path.join(homedir, 'projects', 'openclaw'),
+    path.join(homedir, '项目', 'openclaw'),
+    'C:\\openclaw',
+    'C:\\OpenClaw',
+    'D:\\openclaw',
+    'D:\\项目\\openclaw',
+  ]
+  
+  for (const candidate of candidates) {
+    try {
+      const indexPath = path.join(candidate, 'dist', 'index.js')
+      if (fs.existsSync(indexPath)) {
+        possiblePaths.push(candidate)
+      }
+    } catch {}
+  }
+  
+  return possiblePaths
 }
 
 // 动态获取工作目录
@@ -1356,6 +1403,17 @@ ipcMain.handle('moltBOT:run-command', async (_, command: string, args: string[])
 
 // Gateway 控制
 ipcMain.handle('gateway:start', async () => {
+  // 检查 CLI 路径是否已配置
+  const cliPath = getCliPath()
+  if (!cliPath) {
+    return { success: false, message: 'OpenClaw CLI 路径未配置，请先在设置中配置', needConfig: true }
+  }
+  
+  const indexPath = path.join(cliPath, 'dist', 'index.js')
+  if (!fs.existsSync(indexPath)) {
+    return { success: false, message: `OpenClaw CLI 不存在: ${indexPath}`, needConfig: true }
+  }
+  
   // 先检查端口是否已在使用
   const isRunning = await checkGatewayPort()
   if (isRunning) {
@@ -1370,7 +1428,7 @@ ipcMain.handle('gateway:start', async () => {
   
   return new Promise((resolve) => {
     // 使用 start 命令在新窗口中启动 Gateway
-    const cmd = `start "moltBOT Gateway" node "${path.join(getmoltBOTPath(), 'dist', 'index.js')}" gateway --port ${GATEWAY_PORT} --allow-unconfigured`
+    const cmd = `start "moltBOT Gateway" node "${indexPath}" gateway --port ${GATEWAY_PORT} --allow-unconfigured`
     
     exec(cmd, { shell: 'cmd.exe' }, (err) => {
       if (err) {
@@ -1387,7 +1445,7 @@ ipcMain.handle('gateway:start', async () => {
         gatewayStartTime = Date.now()
         resolve({ success: true, message: 'Gateway started' })
       } else {
-        resolve({ success: false, message: 'Gateway failed to start' })
+        resolve({ success: false, message: 'Gateway 启动失败，请检查 CLI 路径是否正确' })
       }
     }, 3000)
   })
@@ -3090,5 +3148,73 @@ ipcMain.handle('moltBOT:select-folder', async () => {
     isValid: hasSkills || hasMemory,
     hasSkills,
     hasMemory
+  }
+})
+
+// ============================================
+// OpenClaw CLI 路径管理
+// ============================================
+
+// 获取 CLI 路径
+ipcMain.handle('moltBOT:get-cli-path', async () => {
+  return {
+    success: true,
+    path: getCliPath(),
+    isConfigured: !!getCliPath()
+  }
+})
+
+// 设置 CLI 路径
+ipcMain.handle('moltBOT:set-cli-path', async (_, newPath: string) => {
+  try {
+    if (!fs.existsSync(newPath)) {
+      return { success: false, error: '路径不存在' }
+    }
+    
+    const indexPath = path.join(newPath, 'dist', 'index.js')
+    if (!fs.existsSync(indexPath)) {
+      return { success: false, error: '无效的 OpenClaw CLI 路径，找不到 dist/index.js' }
+    }
+    
+    saveCliPath(newPath)
+    return { success: true, path: newPath }
+  } catch (error: any) {
+    return { success: false, error: error.message }
+  }
+})
+
+// 搜索可能的 CLI 路径
+ipcMain.handle('moltBOT:search-cli-paths', async () => {
+  try {
+    const paths = searchCliPaths()
+    return {
+      success: true,
+      paths,
+      current: getCliPath()
+    }
+  } catch (error: any) {
+    return { success: false, error: error.message, paths: [] }
+  }
+})
+
+// 选择 CLI 文件夹
+ipcMain.handle('moltBOT:select-cli-folder', async () => {
+  const result = await dialog.showOpenDialog(mainWindow!, {
+    properties: ['openDirectory'],
+    title: '选择 OpenClaw CLI 目录'
+  })
+  
+  if (result.canceled || result.filePaths.length === 0) {
+    return { path: null }
+  }
+  
+  const selectedPath = result.filePaths[0]
+  const indexPath = path.join(selectedPath, 'dist', 'index.js')
+  const isValid = fs.existsSync(indexPath)
+  
+  return {
+    path: selectedPath,
+    isValid,
+    indexPath
   }
 })

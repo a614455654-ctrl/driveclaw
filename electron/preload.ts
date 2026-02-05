@@ -64,11 +64,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
     getVersion: () => ipcRenderer.invoke('moltBOT:get-version'),
     checkUpdate: () => ipcRenderer.invoke('moltBOT:check-update'),
     update: () => ipcRenderer.invoke('moltBOT:update'),
-    // 路径管理
+    // 工作目录管理
     getPath: () => ipcRenderer.invoke('moltBOT:get-path'),
     setPath: (newPath: string) => ipcRenderer.invoke('moltBOT:set-path', newPath),
     searchPaths: () => ipcRenderer.invoke('moltBOT:search-paths'),
     selectFolder: () => ipcRenderer.invoke('moltBOT:select-folder'),
+    // CLI 路径管理
+    getCliPath: () => ipcRenderer.invoke('moltBOT:get-cli-path'),
+    setCliPath: (newPath: string) => ipcRenderer.invoke('moltBOT:set-cli-path', newPath),
+    searchCliPaths: () => ipcRenderer.invoke('moltBOT:search-cli-paths'),
+    selectCliFolder: () => ipcRenderer.invoke('moltBOT:select-cli-folder'),
   },
   
   // 通用命令执行
