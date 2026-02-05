@@ -135,8 +135,15 @@ export default function Dashboard() {
         addLog('Gateway 已停止', 'success')
       } else {
         addLog('正在启动 Gateway...')
-        await electronAPI?.gateway.start()
-        addLog('Gateway 已启动', 'success')
+        const result = await electronAPI?.gateway.start()
+        if (result?.success) {
+          addLog('Gateway 已启动', 'success')
+        } else {
+          addLog(`Gateway 启动失败: ${result?.message || '未知错误'}`, 'error')
+          if (result?.needConfig) {
+            addLog('请先在「设置」中配置 OpenClaw CLI 路径', 'error')
+          }
+        }
       }
       await new Promise(r => setTimeout(r, 2000))
       await checkStatus()
