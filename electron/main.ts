@@ -3065,6 +3065,56 @@ ipcMain.handle('memory:search', async (_, query: string) => {
   }
 })
 
+// 列出记忆条目 - 使用 CLI 命令
+ipcMain.handle('memory:list', async (_, limit: number = 50, offset: number = 0) => {
+  try {
+    // 尝试使用 memory list 命令
+    const result = await runmoltBOT(`memory list --limit ${limit} --offset ${offset} --json`)
+    
+    // 尝试解析 JSON
+    try {
+      const memories = JSON.parse(result)
+      return { success: true, data: memories }
+    } catch {
+      // 如果不是 JSON，返回原始文本
+      return { success: true, data: { raw: result } }
+    }
+  } catch (error: any) {
+    // 如果 CLI 不支持 list 命令，尝试读取数据库
+    try {
+      if (!fs.existsSync(MEMORY_DB_PATH)) {
+        return { success: true, data: { entries: [], total: 0 } }
+      }
+      
+      // 返回提示信息
+      return { 
+        success: true, 
+        data: { 
+          entries: [],
+          total: 0,
+          note: '暂不支持浏览记忆，请使用搜索功能'
+        }
+      }
+    } catch (e: any) {
+      return { success: false, error: e.message }
+    }
+  }
+})
+
+// 获取记忆详情
+ipcMain.handle('memory:get', async (_, id: string) => {
+  try {
+    const result = await runmoltBOT(`memory get "${id}" --json`)
+    try {
+      return { success: true, data: JSON.parse(result) }
+    } catch {
+      return { success: true, data: { raw: result } }
+    }
+  } catch (error: any) {
+    return { success: false, error: error.message }
+  }
+})
+
 // 清空记忆 - 删除数据库文件
 ipcMain.handle('memory:clear', async () => {
   try {

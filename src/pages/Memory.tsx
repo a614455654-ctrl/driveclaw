@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { 
-  Search, Brain, RefreshCw, AlertCircle, Info, HardDrive, Trash2, X, Clock
+  Search, Brain, RefreshCw, AlertCircle, Info, HardDrive, Trash2, X, Clock,
+  ChevronDown, ChevronRight, Eye, FileText, List, MessageSquare
 } from 'lucide-react'
 import './Memory.css'
 
@@ -11,8 +12,19 @@ interface MemoryStats {
   lastModified: string | null
 }
 
+interface ParsedMemory {
+  id: string
+  score: number
+  content: string
+  metadata?: {
+    sessionKey?: string
+    timestamp?: string
+    role?: string
+  }
+}
+
 const CACHE_KEY = 'memory_cache'
-const CACHE_TTL = 60000 // 1分钟缓存
+const CACHE_TTL = 60000
 
 function loadCache(): { stats: MemoryStats | null; timestamp: number } | null {
   try {
@@ -28,9 +40,57 @@ function saveCache(stats: MemoryStats | null) {
   } catch {}
 }
 
+// 解析搜索结果
+function parseSearchResult(raw: string): ParsedMemory[] {
+  const memories: ParsedMemory[] = []
+  if (!raw) return memories
+  
+  // 尝试多种格式解析
+  const lines = raw.split('\n')
+  let currentMemory: Partial<ParsedMemory> | null = null
+  
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (!trimmed) continue
+    
+    // 格式1: [0.85] content...
+    const scoreMatch = trimmed.match(/^\[?([\d.]+)\]?\s+(.+)/)
+    if (scoreMatch) {
+      if (currentMemory?.content) {
+        memories.push(currentMemory as ParsedMemory)
+      }
+      currentMemory = {
+        id: `mem-${memories.length}`,
+        score: parseFloat(scoreMatch[1]),
+        content: scoreMatch[2]
+      }
+      continue
+    }
+    
+    // 格式2: 继续之前的内容
+    if (currentMemory) {
+      currentMemory.content = (currentMemory.content || '') + '\n' + trimmed
+    } else {
+      // 直接作为内容
+      memories.push({
+        id: `mem-${memories.length}`,
+        score: 1,
+        content: trimmed
+      })
+    }
+  }
+  
+  if (currentMemory?.content) {
+    memories.push(currentMemory as ParsedMemory)
+  }
+  
+  return memories
+}
+
 export default function Memory() {
   const [query, setQuery] = useState('')
   const [searchResult, setSearchResult] = useState('')
+  const [parsedMemories, setParsedMemories] = useState<ParsedMemory[]>([])
   const [loading, setLoading] = useState(false)
   const [searching, setSearching] = useState(false)
   const [error, setError] = useState('')
@@ -42,15 +102,20 @@ export default function Memory() {
   })
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [clearing, setClearing] = useState(false)
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  const [viewMode, setViewMode] = useState<'cards' | 'raw'>('cards')
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('memory_recent_searches')
+      return saved ? JSON.parse(saved) : []
+    } catch { return [] }
+  })
 
-  // 加载记忆配置和统计
   useEffect(() => {
     const load = async () => {
-      // 检查缓存是否有效
       const cached = loadCache()
       if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
         setStats(cached.stats)
-        // 后台加载配置
         try {
           const raw = await window.electronAPI?.moltBOT.configGet('agents.defaults.memorySearch.enabled')
           setMemoryEnabled(String(raw || '').toLowerCase().includes('true'))
@@ -60,11 +125,9 @@ export default function Memory() {
       
       setLoading(true)
       try {
-        // 加载配置
         const raw = await window.electronAPI?.moltBOT.configGet('agents.defaults.memorySearch.enabled')
         setMemoryEnabled(String(raw || '').toLowerCase().includes('true'))
         
-        // 加载统计
         const statsResult = await (window.electronAPI as any)?.memory?.getStats()
         if (statsResult?.success) {
           setStats(statsResult.data)
@@ -86,17 +149,26 @@ export default function Memory() {
     setSaving(false)
   }
 
-  const handleSearch = async () => {
-    if (!query.trim()) return
+  const handleSearch = async (searchQuery?: string) => {
+    const q = searchQuery || query
+    if (!q.trim()) return
     
     setSearching(true)
     setError('')
     setSearchResult('')
+    setParsedMemories([])
     
     try {
-      const result = await (window.electronAPI as any)?.memory?.search(query)
+      const result = await (window.electronAPI as any)?.memory?.search(q)
       if (result?.success) {
-        setSearchResult(result.data || '未找到相关记忆')
+        const raw = result.data || '未找到相关记忆'
+        setSearchResult(raw)
+        setParsedMemories(parseSearchResult(raw))
+        
+        // 保存最近搜索
+        const newSearches = [q, ...recentSearches.filter(s => s !== q)].slice(0, 10)
+        setRecentSearches(newSearches)
+        localStorage.setItem('memory_recent_searches', JSON.stringify(newSearches))
       } else {
         setError(result?.error || '搜索失败')
       }
@@ -120,6 +192,7 @@ export default function Memory() {
         saveCache(newStats)
         setShowClearConfirm(false)
         setSearchResult('')
+        setParsedMemories([])
       } else {
         alert(result?.error || '清空失败')
       }
@@ -141,6 +214,16 @@ export default function Memory() {
     setLoading(false)
   }
 
+  const toggleExpanded = (id: string) => {
+    const newSet = new Set(expandedItems)
+    if (newSet.has(id)) {
+      newSet.delete(id)
+    } else {
+      newSet.add(id)
+    }
+    setExpandedItems(newSet)
+  }
+
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return '0 B'
     const k = 1024
@@ -153,6 +236,13 @@ export default function Memory() {
     if (!iso) return '-'
     return new Date(iso).toLocaleString('zh-CN')
   }
+
+  const quickSearches = [
+    '最近的对话',
+    '重要信息',
+    '用户偏好',
+    '任务记录'
+  ]
 
   return (
     <div className="memory-page">
@@ -215,12 +305,44 @@ export default function Memory() {
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="搜索记忆内容..."
+            placeholder="搜索记忆内容（支持语义搜索）..."
           />
-          <button className="primary" onClick={handleSearch} disabled={searching || !query.trim()}>
+          <button className="primary" onClick={() => handleSearch()} disabled={searching || !query.trim()}>
             {searching ? <RefreshCw className="spin" size={16} /> : '搜索'}
           </button>
         </div>
+        
+        {/* 快捷搜索 */}
+        <div className="quick-searches">
+          <span className="quick-label">快捷搜索:</span>
+          {quickSearches.map(qs => (
+            <button 
+              key={qs} 
+              className="quick-btn" 
+              onClick={() => { setQuery(qs); handleSearch(qs) }}
+              disabled={searching}
+            >
+              {qs}
+            </button>
+          ))}
+        </div>
+        
+        {/* 最近搜索 */}
+        {recentSearches.length > 0 && (
+          <div className="recent-searches">
+            <span className="quick-label">最近搜索:</span>
+            {recentSearches.slice(0, 5).map(rs => (
+              <button 
+                key={rs} 
+                className="recent-btn" 
+                onClick={() => { setQuery(rs); handleSearch(rs) }}
+                disabled={searching}
+              >
+                {rs}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 错误提示 */}
@@ -235,7 +357,65 @@ export default function Memory() {
       )}
 
       {/* 搜索结果 */}
-      {searchResult && (
+      {parsedMemories.length > 0 && (
+        <div className="search-results card">
+          <div className="results-header">
+            <h3><MessageSquare size={18} /> 找到 {parsedMemories.length} 条相关记忆</h3>
+            <div className="view-toggle">
+              <button 
+                className={viewMode === 'cards' ? 'active' : ''} 
+                onClick={() => setViewMode('cards')}
+                title="卡片视图"
+              >
+                <List size={16} />
+              </button>
+              <button 
+                className={viewMode === 'raw' ? 'active' : ''} 
+                onClick={() => setViewMode('raw')}
+                title="原始输出"
+              >
+                <FileText size={16} />
+              </button>
+            </div>
+          </div>
+          
+          {viewMode === 'cards' ? (
+            <div className="memory-list">
+              {parsedMemories.map((mem, idx) => (
+                <div key={mem.id} className="memory-item">
+                  <div 
+                    className="memory-header" 
+                    onClick={() => toggleExpanded(mem.id)}
+                  >
+                    <div className="memory-meta">
+                      {expandedItems.has(mem.id) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                      <span className="memory-index">#{idx + 1}</span>
+                      {mem.score < 1 && (
+                        <span className="memory-score" title="相似度">
+                          {(mem.score * 100).toFixed(0)}%
+                        </span>
+                      )}
+                    </div>
+                    <div className="memory-preview">
+                      {mem.content.slice(0, 100)}{mem.content.length > 100 ? '...' : ''}
+                    </div>
+                  </div>
+                  {expandedItems.has(mem.id) && (
+                    <div className="memory-content">
+                      <pre>{mem.content}</pre>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <pre className="result-content">{searchResult}</pre>
+          )}
+        </div>
+      )}
+
+      {/* 无搜索结果时显示提示 */}
+      {searchResult && parsedMemories.length === 0 && (
         <div className="search-results card">
           <h3>搜索结果</h3>
           <pre className="result-content">{searchResult}</pre>
@@ -243,11 +423,22 @@ export default function Memory() {
       )}
 
       {/* 空状态 */}
-      {!stats?.exists && (
+      {!stats?.exists && !searchResult && (
         <div className="empty-state card">
           <Brain size={48} />
           <h3>暂无记忆</h3>
           <p>记忆会在与 AI 对话时自动创建</p>
+        </div>
+      )}
+
+      {/* 使用提示 */}
+      {stats?.exists && !searchResult && (
+        <div className="memory-tip card">
+          <Eye size={20} />
+          <div>
+            <h4>如何浏览记忆？</h4>
+            <p>使用上方搜索框进行语义搜索，可以找到相关的对话记忆。支持自然语言查询。</p>
+          </div>
         </div>
       )}
 

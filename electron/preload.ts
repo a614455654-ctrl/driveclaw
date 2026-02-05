@@ -204,6 +204,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   memory: {
     getStats: () => ipcRenderer.invoke('memory:stats'),
     search: (query: string) => ipcRenderer.invoke('memory:search', query),
+    list: (limit?: number, offset?: number) => ipcRenderer.invoke('memory:list', limit, offset),
+    get: (id: string) => ipcRenderer.invoke('memory:get', id),
     clear: () => ipcRenderer.invoke('memory:clear'),
   },
 })

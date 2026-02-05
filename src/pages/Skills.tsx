@@ -351,56 +351,7 @@ export default function Skills() {
     }
   }
 
-  // 清理 ANSI 转义码
-  const cleanAnsi = (text: string): string => {
-    return text.replace(/\x1b\[[0-9;]*m/g, '').replace(/\[\d+m/g, '')
-  }
-
-  // 解析测试结果为用户友好格式
-  const formatTestResult = (output: string, skillName: string): string => {
-    const clean = cleanAnsi(output).trim()
-    
-    // 检查是否有错误
-    if (clean.toLowerCase().includes('error') || clean.toLowerCase().includes('failed')) {
-      // 提取错误信息
-      const errorMatch = clean.match(/(?:error|failed)[:\s]*(.*)/i)
-      if (errorMatch) {
-        return `❌ 测试失败\n\n错误信息: ${errorMatch[1].trim()}`
-      }
-      return `❌ 测试失败\n\n${clean.substring(0, 200)}`
-    }
-    
-    // 检查警告
-    const warnings: string[] = []
-    const warningMatches = clean.match(/warning[s]?[:\s]*([^\n]+)/gi)
-    if (warningMatches) {
-      warnings.push(...warningMatches.map(w => cleanAnsi(w).replace(/warning[s]?[:\s]*/i, '').trim()))
-    }
-    
-    // 检查状态迁移信息
-    const migrationSkipped = clean.includes('migration skipped') || clean.includes('already exists')
-    
-    // 构建友好输出
-    let result = `✅ ${skillName} 测试通过\n\n`
-    result += `状态: 就绪，可正常使用`
-    
-    if (warnings.length > 0) {
-      result += `\n\n⚠️ 提示:\n`
-      warnings.slice(0, 3).forEach(w => {
-        if (w && !w.includes('[')) {
-          result += `  • ${w}\n`
-        }
-      })
-    }
-    
-    if (migrationSkipped) {
-      result += `\n\nℹ️ 技能已配置，无需重新初始化`
-    }
-    
-    return result
-  }
-
-  // 测试技能 - 验证技能状态
+  // 测试技能
   const testSkill = async (skill: LocalSkill) => {
     if (skill.status !== 'ready') return
     
