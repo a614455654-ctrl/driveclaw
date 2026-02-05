@@ -10,6 +10,19 @@ import { randomUUID } from 'crypto'
 import WebSocket from 'ws'
 import { EventEmitter } from 'events'
 
+// 全局错误处理 - 防止应用崩溃
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error)
+  // 忽略网络连接错误
+  if (error.message?.includes('ECONNREFUSED') || error.message?.includes('ECONNRESET')) {
+    return
+  }
+})
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason)
+})
+
 const execAsync = promisify(exec)
 
 // moltBOT 路径配置
@@ -477,12 +490,13 @@ class GatewayWsClient extends EventEmitter {
   }
 
   private scheduleReconnect() {
-    if (this.reconnectTimer) return
-    this.reconnectTimer = setTimeout(() => {
-      this.reconnectTimer = null
-      this.emit('reconnecting')
-      this.connect().catch(() => {})
-    }, 3000)
+    // 禁用自动重连，防止 Gateway 未运行时循环报错
+    // if (this.reconnectTimer) return
+    // this.reconnectTimer = setTimeout(() => {
+    //   this.reconnectTimer = null
+    //   this.emit('reconnecting')
+    //   this.connect().catch(() => {})
+    // }, 3000)
   }
 
   private flushPending(err: Error) {
