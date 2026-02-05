@@ -197,7 +197,7 @@ export default function CronManager() {
       <div className="page-header">
         <h2><Clock size={24} /> 定时任务</h2>
         <div className="header-actions">
-          <button className="btn-icon" onClick={loadJobs} disabled={refreshing} title="刷新">
+          <button className="btn-icon" onClick={() => loadJobs()} disabled={refreshing} title="刷新">
             <RefreshCw size={18} className={refreshing ? 'spin' : ''} />
           </button>
           <button className="primary" onClick={() => setShowAdd(true)} disabled={!gatewayOnline}>
