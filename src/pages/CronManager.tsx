@@ -11,7 +11,7 @@ interface CronJob {
   nextRun: string
 }
 
-const CACHE_KEY = 'Drivemolt_cron_jobs'
+const CACHE_KEY = 'Driveclaw_cron_jobs'
 
 // Strip ANSI color codes from CLI output
 const stripAnsi = (str: string) => str.replace(/\x1b\[[0-9;]*m/g, '')

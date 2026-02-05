@@ -39,9 +39,9 @@ interface GatewayDetails {
 
 // Cache keys
 const CACHE_KEYS = {
-  cronJobs: 'Drivemolt_dashboard_crons',
-  memory: 'Drivemolt_dashboard_memory',
-  logs: 'Drivemolt_dashboard_logs'
+  cronJobs: 'Driveclaw_dashboard_crons',
+  memory: 'Driveclaw_dashboard_memory',
+  logs: 'Driveclaw_dashboard_logs'
 }
 
 const formatBytes = (bytes: number) => {
@@ -82,8 +82,8 @@ export default function Dashboard() {
   const [logs, setLogs] = useState<string[]>(() => {
     try {
       const cached = localStorage.getItem(CACHE_KEYS.logs)
-      return cached ? JSON.parse(cached) : ['✔ Drivemolt 已启动']
-    } catch { return ['✔ Drivemolt 已启动'] }
+      return cached ? JSON.parse(cached) : ['✔ Driveclaw 已启动']
+    } catch { return ['✔ Driveclaw 已启动'] }
   })
   const [cronJobs, setCronJobs] = useState<CronJob[]>(() => {
     try {
@@ -215,7 +215,7 @@ export default function Dashboard() {
         if (parsed.length > 0 || !channels.length) {
           setChannels(parsed)
           // 缓存到 localStorage
-          localStorage.setItem('Drivemolt_channels', JSON.stringify(parsed))
+          localStorage.setItem('Driveclaw_channels', JSON.stringify(parsed))
         }
       }
     } catch {
@@ -226,7 +226,7 @@ export default function Dashboard() {
   // 加载缓存的渠道状态
   const loadCachedChannels = () => {
     try {
-      const cached = localStorage.getItem('Drivemolt_channels')
+      const cached = localStorage.getItem('Driveclaw_channels')
       if (cached) {
         setChannels(JSON.parse(cached))
       }
@@ -378,7 +378,7 @@ export default function Dashboard() {
           </div>
           <div className="process-memory">
             <div className="process-item">
-              <span>🦞 Drivemolt</span>
+              <span>🦞 Driveclaw</span>
               <span>{formatMB(processMemory?.app.rss || 0)}</span>
             </div>
             <div className="process-item">

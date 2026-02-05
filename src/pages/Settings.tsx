@@ -33,9 +33,9 @@ interface ApiProfile {
 }
 
 // 本地存储 key
-const CONFIG_STORAGE_KEY = 'Drivemolt-settings-config'
-const API_PROFILES_KEY = 'Drivemolt-api-profiles'
-const moltBOT_UPDATE_STATE_KEY = 'Drivemolt-moltBOT-update-state'
+const CONFIG_STORAGE_KEY = 'Driveclaw-settings-config'
+const API_PROFILES_KEY = 'Driveclaw-api-profiles'
+const moltBOT_UPDATE_STATE_KEY = 'Driveclaw-moltBOT-update-state'
 
 // 加载本地配置
 const loadLocalConfig = (): Partial<Config> => {
@@ -791,9 +791,9 @@ export default function Settings() {
             <label className="toggle-switch">
               <input 
                 type="checkbox" 
-                checked={localStorage.getItem('Drivemolt_auto_restart_gateway') !== 'false'}
+                checked={localStorage.getItem('Driveclaw_auto_restart_gateway') !== 'false'}
                 onChange={e => {
-                  localStorage.setItem('Drivemolt_auto_restart_gateway', String(e.target.checked));
+                  localStorage.setItem('Driveclaw_auto_restart_gateway', String(e.target.checked));
                   // 强制重新渲染
                   setAppSettings(prev => ({...prev}));
                 }}
@@ -900,7 +900,7 @@ export default function Settings() {
           
           <div className="version-row">
             <div className="version-card">
-              <label>Drivemolt 版本</label>
+              <label>Driveclaw 版本</label>
               <div className="version-number">v{APP_VERSION}</div>
               {updateInfo?.hasUpdate && (
                 <span className="update-badge">新版本 v{updateInfo.latestVersion}</span>

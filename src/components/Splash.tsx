@@ -38,7 +38,7 @@ export default function Splash({ onComplete }: SplashProps) {
     <div className="splash-screen">
       <div className="splash-content">
         <div className="splash-logo">🦞</div>
-        <h1 className="splash-title">Drivemolt</h1>
+        <h1 className="splash-title">Driveclaw</h1>
         <p className="splash-subtitle">moltBOT 控制面板</p>
         
         <div className="splash-progress">

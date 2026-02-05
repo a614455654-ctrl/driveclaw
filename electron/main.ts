@@ -396,7 +396,7 @@ class GatewayWsClient extends EventEmitter {
       maxProtocol: 3,
       client: {
         id: 'webchat-ui',  // 必须是 moltBOT 预定义的客户端 ID
-        displayName: 'Drivemolt Desktop',
+        displayName: 'Driveclaw Desktop',
         version: '1.0.0',
         platform: process.platform,
         mode: 'webchat',  // webchat 模式
@@ -623,7 +623,7 @@ function createTray() {
   
   const contextMenu = Menu.buildFromTemplate([
     { 
-      label: '🦞 Drivemolt', 
+      label: '🦞 Driveclaw', 
       enabled: false 
     },
     { type: 'separator' },
@@ -662,7 +662,7 @@ function createTray() {
     }
   ])
   
-  tray.setToolTip('Drivemolt - moltBOT 控制面板')
+  tray.setToolTip('Driveclaw - moltBOT 控制面板')
   tray.setContextMenu(contextMenu)
   
   tray.on('click', () => {
@@ -696,7 +696,7 @@ async function handleCloseRequest() {
     buttons: ['最小化到后台', '退出程序', '取消'],
     defaultId: 0,
     cancelId: 2,
-    title: '关闭 Drivemolt',
+    title: '关闭 Driveclaw',
     message: '您要如何处理窗口？',
     detail: '最小化到后台会保持 Gateway 运行',
     checkboxLabel: '记住我的选择',
@@ -1094,7 +1094,7 @@ async function smitheryRequest(endpoint: string): Promise<{ success: boolean; da
     https.get(url.toString(), {
       headers: {
         'Accept': 'application/json',
-        'User-Agent': 'Drivemolt/1.0'
+        'User-Agent': 'Driveclaw/1.0'
       },
       timeout: 30000
     }, (res) => {
@@ -1950,7 +1950,7 @@ ipcMain.handle('system:info', async () => {
 
 // 获取进程内存信息
 ipcMain.handle('system:process-memory', async () => {
-  // Drivemolt 应用内存
+  // Driveclaw 应用内存
   const appMemory = process.memoryUsage()
   
   // 尝试获取 Gateway/moltBOT 进程内存
@@ -2033,7 +2033,7 @@ ipcMain.handle('settings:save', async (_, newSettings: Partial<AppSettings>) => 
 // 日志导出
 ipcMain.handle('logs:export', async (_, logs: string[], filename?: string) => {
   const { dialog } = require('electron')
-  const defaultPath = filename || `Drivemolt-logs-${new Date().toISOString().slice(0, 10)}.txt`
+  const defaultPath = filename || `Driveclaw-logs-${new Date().toISOString().slice(0, 10)}.txt`
   
   const result = await dialog.showSaveDialog(mainWindow!, {
     title: '导出日志',

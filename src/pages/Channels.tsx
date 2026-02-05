@@ -73,7 +73,7 @@ export default function Channels() {
 
   const loadCachedChannels = () => {
     try {
-      const cached = localStorage.getItem('Drivemolt_channels_detail')
+      const cached = localStorage.getItem('Driveclaw_channels_detail')
       if (cached) {
         setChannels(JSON.parse(cached))
       }
@@ -89,7 +89,7 @@ export default function Channels() {
         // 只有解析成功才更新
         if (parsed.length > 0 || channels.length === 0) {
           setChannels(parsed)
-          localStorage.setItem('Drivemolt_channels_detail', JSON.stringify(parsed))
+          localStorage.setItem('Driveclaw_channels_detail', JSON.stringify(parsed))
         }
       }
     } catch (error) {

@@ -61,10 +61,10 @@ const electronAPI = (window as any).electronAPI
 
 // 缓存 key
 const CACHE_KEYS = {
-  localSkills: 'Drivemolt_local_skills',
-  localStats: 'Drivemolt_local_skills_stats',
-  hubSkills: 'Drivemolt_hub_skills',
-  smitheryServers: 'Drivemolt_smithery_servers',
+  localSkills: 'Driveclaw_local_skills',
+  localStats: 'Driveclaw_local_skills_stats',
+  hubSkills: 'Driveclaw_hub_skills',
+  smitheryServers: 'Driveclaw_smithery_servers',
 }
 
 export default function Skills() {

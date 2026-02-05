@@ -1,14 +1,14 @@
-# Drivemolt 实时对话系统架构
+# Driveclaw 实时对话系统架构
 
 ## 概述
 
-Drivemolt 是 moltBOT 的桌面客户端，实现与 moltBOT Gateway 的实时双向通信。核心技术是基于 **WebSocket** 协议的长连接通信，而非 HTTP SSE。
+Driveclaw 是 moltBOT 的桌面客户端，实现与 moltBOT Gateway 的实时双向通信。核心技术是基于 **WebSocket** 协议的长连接通信，而非 HTTP SSE。
 
 ## 系统架构图
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                         Drivemolt (Electron)                        │
+│                         Driveclaw (Electron)                        │
 │                                                                     │
 │  ┌─────────────────────┐         IPC          ┌──────────────────┐ │
 │  │    Main Process     │ ←─────────────────→  │  Renderer Process │ │
@@ -56,7 +56,7 @@ interface RequestFrame {
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "method": "chat.send",
   "params": {
-    "sessionKey": "Drivemolt-1706745600000",
+    "sessionKey": "Driveclaw-1706745600000",
     "message": "你好",
     "idempotencyKey": "550e8400-e29b-41d4-a716-446655440001"
   }
@@ -199,7 +199,7 @@ interface ConnectParams {
 {
   "method": "chat.send",
   "params": {
-    "sessionKey": "Drivemolt-xxx",
+    "sessionKey": "Driveclaw-xxx",
     "message": "用户输入的消息",
     "thinking": "off|minimal|low|medium|high",  // 可选
     "idempotencyKey": "uuid"  // 幂等键
@@ -227,7 +227,7 @@ interface ConnectParams {
 {
   "method": "chat.history",
   "params": {
-    "sessionKey": "Drivemolt-xxx",
+    "sessionKey": "Driveclaw-xxx",
     "limit": 100
   }
 }
@@ -238,7 +238,7 @@ interface ConnectParams {
 {
   "ok": true,
   "payload": {
-    "sessionKey": "Drivemolt-xxx",
+    "sessionKey": "Driveclaw-xxx",
     "sessionId": "session-id",
     "messages": [...],
     "thinkingLevel": "medium"
@@ -253,7 +253,7 @@ interface ConnectParams {
 {
   "method": "chat.abort",
   "params": {
-    "sessionKey": "Drivemolt-xxx",
+    "sessionKey": "Driveclaw-xxx",
     "runId": "run-xxx"  // 可选
   }
 }
@@ -399,7 +399,7 @@ const parseThinkingBlocks = (text: string): { content: string; thinking: Thinkin
 ## 文件结构
 
 ```
-Drivemolt/
+Driveclaw/
 ├── electron/
 │   ├── main.ts           # 主进程 (包含 GatewayWsClient)
 │   └── preload.ts        # IPC 桥接

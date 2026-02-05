@@ -1,5 +1,5 @@
 {
-  "name": "Drivemolt",
+  "name": "Driveclaw",
   "version": "1.0.0",
   "description": "moltBOT Desktop Control Panel",
   "main": "dist-electron/main.js",
@@ -30,8 +30,8 @@
     "vite-plugin-electron-renderer": "^0.14.6"
   },
   "build": {
-    "appId": "com.Drivemolt.app",
-    "productName": "Drivemolt",
+    "appId": "com.Driveclaw.app",
+    "productName": "Driveclaw",
     "directories": {
       "output": "release"
     },
